@@ -21,5 +21,10 @@ print(res.headers['content-type'])
 
 print()
 print("### crawling method")
-result = crawling('https://dewble.com','h2')
-print(result)
+result = crawling('https://dewble.com','article > h2 a')
+#print(result)
+
+for item in result:
+    print(item)
+
+    # main > div.archive > div > div:nth-child(1) > article > h2
