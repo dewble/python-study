@@ -42,7 +42,7 @@ def crawling_template_with_href_new(url, css_selector, pickle_name):
 다음 실행 시 빈 리스트와 크롤링한 내용 다름 > 출력 
 '''
 
-datas1 = crawling_template_with_href_new('http://www.drapt.com/e_sale/index.htm?page_name=esale_news&menu_key=34', 'a.c0000000', 'drapt.txt')
+datas1 = crawling_template_with_href_new('https://dewble.com/', '#main > div.archive > div > div > article > h2 > a', 'drapt.txt')
 
 with open('drapt.txt', 'wb') as file1:
     pickle.dump(datas1, file1)
