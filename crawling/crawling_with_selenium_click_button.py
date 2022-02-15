@@ -17,6 +17,7 @@ while loop:
     except:
         loop = False
 
+## click selector
 datas1 = driver.find_elements_by_css_selector('div.comment_body > p')
 for item in datas1:
     print ('댓글]', item.text)
