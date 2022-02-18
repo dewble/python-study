@@ -2,8 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
-
 def crawling(url, css_selector):
     return_data = list()
     res = requests.get(url)
@@ -20,7 +18,7 @@ print("### res.headers")
 print(res.headers['content-type'])
 
 print()
-print("### crawling method")
+print("### crawling_bak method")
 result = crawling('https://dewble.com','div > article > h2')
 #print(result)
 
