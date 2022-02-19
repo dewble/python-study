@@ -43,5 +43,6 @@ def crawling_with_link(url, css_selector, pre_url):
     return return_data
 
 datas1 = crawling_with_link('http://www.drapt.com/e_sale/index.htm?page_name=esale_news&menu_key=34', 'a.c0000000', 'http://www.drapt.com/e_sale/')
+print(datas1)
 
 write_excel_template_customize_link('tmp.xlsx', datas1)
