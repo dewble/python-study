@@ -17,10 +17,15 @@ data_replace = "(Kubernetes)"
 # count()
 print("특정 문자 개수 세기 - count() :", data.count('f'))
 
-# index(), find()
+# index()
 print("문자열에 있는 특정 문자 위치 찾기 - index() :", data.index('i'))
+
+# find()
 print("문자열에 있는 특정 문자 위치 찾기 - find() :", data.find('i'))
 print("문자열에 있는 특정 문자 위치 찾기, 없는 문자 - find() :", data.find('none'))
+
+if data.find('none') == -1:
+    print("해당하는 문자가 없습니다")
 
 # join()
 print("문자열 사이에 다른 문자 넣기 - join() :", data_join.join(data2))
