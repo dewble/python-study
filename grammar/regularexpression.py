@@ -93,3 +93,4 @@ print(res18)
 data = "900206-1234567"
 subed = re.sub('-[0-9]{7}','-******',data)
 print(subed)
+
