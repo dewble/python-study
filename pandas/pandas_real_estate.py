@@ -27,7 +27,15 @@ doc = pd.read_csv("01_data/아파트(매매)__실거ᄅ�
 # doc_row = doc[doc['단지명'] == '신동아']
 # print(doc_row)
 
-doc_month = doc.groupby('계약년월').count()
-# print(doc_month.head())
-print(doc_month.columns)
-print(doc_month.index)
+# doc_month = doc.groupby('계약년월').count()
+# # print(doc_month.head())
+# print(doc_month.columns)
+# print(doc_month.index)
+
+# print(doc.head())
+
+doc_month = doc.groupby("계약년월").count()
+# print(doc_month)
+# doc_month.info()
+
+print(doc_month.loc[200601]["시군구"])
