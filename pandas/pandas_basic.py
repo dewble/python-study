@@ -94,41 +94,62 @@ df = pd.DataFrame({
 # df = df.reset_index("이름")
 # print(df)
 
-## 데이터프레임 특정 행 가져오기
+"""데이터프레임 특정 행 가져오기"""
 # df = df.set_index("이름")
 # print(df.loc["A"])
 #
 # df = df.reset_index("이름")
 # print(df.iloc[0])
 
-# ## 데이터프레임 특정 칼럼 가져오기
+"""데이터프레임 특정 칼럼 가져오기"""
 # print(df)
 # print(type(df['bench']))
 # print(df['bench'])
 # print(df['bench'][0])
 # print(df.loc[0]['bench'])
 
-# ## Dataframe 컬럼 추가 - Update
+"""Dataframe 컬럼 추가 - Update"""
 # print(df)
 # df['shoulder'] = [135,145,155]
 # print(df)
 #
-# ## Dataframe 컬럼 삭제 - Delete
+"""
+Dataframe 컬럼 삭제 - Delete
+"""
 # del df['bench']
 # print(df)
 
-# ## Dataframe 행 추가 - Update
+"""
+Dataframe 행 추가 - Update
+"""
 # df = df.set_index("이름")
 # df.loc["A"] = [135, 235, 300]
 # print(df)
 #
-# ## Dataframe 행 삭제 - Delete
+"""
+Dataframe 행 삭제 - Delete
+"""
 # df = df.drop(["C"])
 # print(df)
 
-## Dataframe 특정 컬럼 복사(선택) - copy()
-print(df)
-df = df.set_index("이름")
+"""
+Dataframe 특정 컬럼 복사(선택) - copy()
+"""
+# print(df)
+# df = df.set_index("이름")
+#
+# df2 = df[['squat','dead']].copy()
+# print(df2)
 
-df2 = df[['squat','dead']].copy()
-print(df2)
+"""
+format 문법으로 날짜 자리수 채우기
+"""
+
+# day1 = 10.123
+# day2 = 10
+# day3 = 20
+# print("{0:0.1f}".format(day1))
+# print("{0:0.2f}".format(day1))
+# print("{0:0.3f}".format(day1))
+# print("{0:0.4f}".format(day1))
+# print("{0:0.2f}, {1:04d}, {2:01d}".format(day1,day2,day3))
