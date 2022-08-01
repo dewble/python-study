@@ -75,10 +75,10 @@ apartment['weekday'] = apartment['계약년월일'].dt.weekday
 apartment['month'] = apartment['계약년월일'].dt.month
 apartment['quarter'] = apartment['계약년월일'].dt.quarter
 
-# apartment_monthday = apartment.groupby('monthday').count()
-# apartment_weekday = apartment.groupby('weekday').count()
-# apartment_year_month = apartment.groupby(['year', 'month']).count()
-# apartment_quarter = apartment.groupby('quarter').count()
+apartment_monthday = apartment.groupby('monthday').count()
+apartment_weekday = apartment.groupby('weekday').count()
+apartment_year_month = apartment.groupby(['year', 'month']).count()
+apartment_quarter = apartment.groupby('quarter').count()
 
 
 """ 15년동안 아파트 매매가 분석: 월별 거래 건수 - plotly """
@@ -111,12 +111,12 @@ apartment['quarter'] = apartment['계약년월일'].dt.quarter
 
 
 """ 멀티 컬럼으로 그룹핑하기 """
-apartment_year_month = apartment.groupby(['year', 'month']).count()
+# apartment_year_month = apartment.groupby(['year', 'month']).count()
 # print(apartment_year_month.head())
 
 
 """ 최신 문법: query() - 직관적으로 내가 원하는 데이터를 가져오는 문법 """
-apartment_year_month_3 = apartment_year_month.query("month == 3")
+# apartment_year_month_3 = apartment_year_month.query("month == 3")
 # print(apartment_year_month_3)
 
 
@@ -262,7 +262,7 @@ apartment_year_month_3 = apartment_year_month.query("month == 3")
 
 """ 월별 거래건수에서 최대/최소 거래건수 삭제 후, 평균으로 파악해보기 """
 # print(apartment_year_month.head())
-apartment_year_month = apartment_year_month.reset_index()
+# apartment_year_month = apartment_year_month.reset_index()
 
 """
 슬라이싱, 가장작은수, 가장 큰 수를 뺀다"""
@@ -274,28 +274,106 @@ apartment_year_month = apartment_year_month.reset_index()
 
 """
 각 월별 평균값 구하기"""
-mean_per_month = list()
-for index in range(1, 13):
-    apartment_year_month_each = apartment_year_month[apartment_year_month['month'] == index].sort_values(by='시군구')[1:-1]
-    mean_per_month.append(apartment_year_month_each['시군구'].mean())
-
-print(mean_per_month)
+# mean_per_month = list()
+# for index in range(1, 13):
+#     apartment_year_month_each = apartment_year_month[apartment_year_month['month'] == index].sort_values(by='시군구')[1:-1]
+#     mean_per_month.append(apartment_year_month_each['시군구'].mean())
+#
+# print(mean_per_month)
 
 
 """ 그래프 - 특정 월의 년도별 평균 거래건수 (최대 및 최소 거래건수 삭제) """
+# fig = go.Figure()
+# fig.add_trace(
+#     go.Bar(
+#         x=list(range(1, 13)),
+#         y=mean_per_month,
+#         text=mean_per_month, textposition='auto', texttemplate='%{y:.2f}'
+#     )
+# )
+#
+# fig.update_layout(
+#     {
+#         "title": {
+#             "text": "<b>특정 월의 년도별 평균 거래건수 (최대 및 최소 거래건수 삭제)</b>",
+#             "x": 0.5,
+#             "y": 0.9,
+#             "font": {
+#                 "size": 18
+#             }
+#         },
+#         "xaxis": {
+#             "showticklabels":True,
+#             "dtick": "D1"
+#         }
+#     },
+#     template='presentation'
+# )
+#
+# fig.show()
+
+## 날짜별 거래 건수 그래프로 확인하기
+## Plotly로 데이터 확인하기
+
+"""  15년동안의 아파트 매매가 분석: 분기별 거래건수 """
+# # print(apartment_quarter.index)
+#
+# # index 변경
+# apartment_quarter.index = ['1Q', '2Q', '3Q', '4Q']
+#
+# print(apartment_quarter.index)
+#
+# print(apartment_quarter.head())
+
+# # plotly로 분석
+# fig = go.Figure()
+# fig.add_trace(
+#     go.Bar(
+#         x=apartment_quarter.index,
+#         y=apartment_quarter['시군구']
+#     )
+# )
+#
+# fig.update_layout(
+#     {
+#         "title": {
+#             "text": "<b>분기별 거래건수</b>",
+#             "x": 0.5,
+#             "y": 0.9,
+#             "font": {
+#                 "size": 18
+#             }
+#         },
+#         "xaxis": {
+#             "showticklabels":True
+#         },
+#         "template":'ggplot2'
+#     }
+# )
+#
+# fig.show()
+
+""" 15년동안의 아파트 매매가 분석: 요일별 거래건수 """
+# print(apartment_weekday.head())
+
+# print(apartment.groupby('weekday').tail())
+# print(apartment.tail())
+apartment_weekday.index = ['월', '화', '수', '목', '금', '토', '일']
+print(apartment_weekday.index)
+
+# plotly로 분석
 fig = go.Figure()
 fig.add_trace(
     go.Bar(
-        x=list(range(1, 13)),
-        y=mean_per_month,
-        text=mean_per_month, textposition='auto', texttemplate='%{y:.2f}'
+        x=apartment_weekday.index,
+        y=apartment_weekday['시군구']
     )
 )
 
 fig.update_layout(
     {
         "title": {
-            "text": "<b>특정 월의 년도별 평균 거래건수 (최대 및 최소 거래건수 삭제)</b>",
+            "text": "요일별 거래건수",
             "x": 0.5,
             "y": 0.9,
             "font": {
@@ -303,13 +381,10 @@ fig.update_layout(
             }
         },
         "xaxis": {
-            "showticklabels":True,
-            "dtick": "D1"
-        }
-    },
-    template='presentation'
+            "showticklabels":True
+        },
+        "template":"ggplot2"
+    }
 )
 
 fig.show()
-# 날짜별 거래 건수 그래프로 확인하기
-## Plotly로 데이터 확인하기
