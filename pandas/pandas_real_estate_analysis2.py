@@ -495,4 +495,28 @@ apartment_month.index = pd.to_datetime(apartment_month.index, format='%Y%m', err
 
 
 """ 24. 특정 지역 (구별 평균 매매가) """
-print(apartment.head())
+# print(apartment.head())
+# apartment["시군구"] = apartment["시군구"].str.split()
+# print(apartment["시군구"])
+
+apartment["시"] = apartment["시군구"].str.split().str[0]
+apartment["구"] = apartment["시군구"].str.split().str[1]
+apartment["동"] = apartment["시군구"].str.split().str[2]
+# print(apartment["시"])
+# print(apartment["구"])
+# print(apartment["동"])
+# print(apartment.head())
+
+# month 컬럼 만들기
+apartment["month"] = apartment["계약년월일"].dt.month
+# print(apartment.head())
+
+# 각각의 연도별, 월별, 구별 - groupby
+apartment_gu = apartment.groupby(["year","month","구"]).mean()
+apartment_gu = apartment_gu.reset_index()
+# print(apartment_gu.head())
+
+# 이 상태에서 특정 컬럼을 가진 df를 따로 만든다 - copy의 개념
+apartment_gu_flourish = apartment_gu[['구', '거래금액(만원)', '계약년월', 'year', 'month']].copy()
+# print(apartment_gu_flourish.head())
+apartment_gu_flourish.info()
