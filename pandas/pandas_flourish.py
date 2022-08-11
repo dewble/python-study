@@ -5,7 +5,8 @@ import pandas as pd
 1. 사전준비
 2. 각각의 구별로 연도에 따라 어떻게 거래금액이 변화해왔는지 보고 싶다.
 3. 코드 정리
-4. 컬럼을 하나씩  가져와서 이어 붙인다.
+4. 컬럼을 하나씩 가져와서 이어 붙인다. (위에서 진행했던 내용을 for문으로 반복)
+5. csv 파일로 저장
 """
 
 """1. 사전준비
@@ -72,7 +73,7 @@ apartment_toflourish = apartment_toflourish.set_index('구')
 apartment_toflourish.columns = [200601]
 """
 
-"""4. 컬럼을 하나씩  가져와서 이어 붙인다.
+"""4. 컬럼을 하나씩 가져와서 이어 붙인다. (위에서 진행했던 내용을 for문으로 반복)
 """
 ## 하나씩 컬럼을 가져와서 이어 붙인다.
 for index in datelist[1:]:
@@ -81,5 +82,9 @@ for index in datelist[1:]:
     add_flourish.columns = [int(index)]
     apartment_toflourish = pd.concat([apartment_toflourish, add_flourish], axis=1)
 
+# print(apartment_toflourish.head())
 
-print(apartment_toflourish.head())
+"""5. csv 파일로 저장
+"""
+# apartment_toflourish.info()
+apartment_toflourish.to_csv("seoul_apartment.csv", encoding="utf-8-sig")
