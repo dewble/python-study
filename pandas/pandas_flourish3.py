@@ -3,6 +3,8 @@
 2. 사전 준비
     - 기존에 만들었던 pickle을 가져와서 사용
 3. 누적 수익률 계산하기
+4. 시각화 하기
+5. 추가 문법 이해 (정렬, sort_values(), sort_index())
 """
 
 import pickle
@@ -76,8 +78,10 @@ for index in datelist[1:]:
 
 """3. 누적 수익률 계산하기 - 강남구
 """
+gu_list = list(apartment_toflourish.index)
+# print(gu_list)
 # 위 df에서 series를 만든다.
-each_gu = apartment_toflourish.loc["강남구"]
+each_gu = apartment_toflourish.loc[gu_list[0]]
 # print(each_gu)
 
 # series name 변경, pct_change() 함수 적용
@@ -91,4 +95,103 @@ each_gu_changerate = pd.concat([each_gu,changerate], axis=1)
 
 # 변화률의 누적곱을 이용하여 수익률을 구한다.
 each_gu_changerate["profit_rate"] = (each_gu_changerate["change_rate"] + 1).cumprod()
-print(each_gu_changerate)
+# print(each_gu_changerate)
+
+# 수익률을 따로 copy하고 series를 df로 변경, column을 강남구로 변경
+gu_profitrate = each_gu_changerate[["profit_rate"]].copy()
+# print(type(gu_profitrate))
+
+gu_profitrate.columns = ["강남구"]
+# print(gu_profitrate)
+
+# gu_list의 각 구들도 위 내용을 반복해서 수익률을 계산하고, concat으로 이어 나간다.
+for gu in gu_list[1:]:
+    each_gu = apartment_toflourish.loc[gu]
+    changerate = each_gu.pct_change()
+    changerate.name = 'change_rate'
+    each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+    each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+    gu_profitrate_each = each_gu_changerate[['profit_rate']].copy()
+    gu_profitrate_each.columns = [gu]
+    gu_profitrate = pd.concat([gu_profitrate, gu_profitrate_each], axis=1)
+
+# print(gu_profitrate.head())
+
+# 없는 데이터(NaN)을 특정값으로 일괄 변경하기
+gu_profitrate = gu_profitrate.fillna(1)
+# print(gu_profitrate.head())
+
+"""4. 시각화 하기
+"""
+gu_profitrate.index = pd.to_datetime(gu_profitrate.index, format='%Y%m', errors='raise')
+import plotly.graph_objects as go
+
+# fig = go.Figure()
+# fig.add_trace(
+#     go.Scatter(
+#         x=gu_profitrate.index, y=gu_profitrate['강남구']
+#     )
+# )
+#
+# fig.update_layout(
+#     {
+#         "title": {
+#             "text": "강남구",
+#             "x": 0.5,
+#             "y": 0.9,
+#             "font": {
+#                 "size": 20
+#             }
+#         },
+#         "xaxis": {
+#         },
+#         "yaxis": {
+#             "tickformat": "%"
+#         },
+#         "template": 'none'
+#
+#     }
+# )
+# fig.show()
+
+# # 여러 그래프 한번에 그리 - add trace
+# gu_profitrate.columns
+#
+# gu_list = list(gu_profitrate.columns)
+#
+# import plotly.graph_objects as go
+#
+# fig = go.Figure()
+#
+# for gu in gu_list:
+#     fig.add_trace(
+#         go.Scatter(
+#             x=gu_profitrate.index, y=gu_profitrate[gu], name=gu
+#         )
+#     )
+#
+# fig.update_layout(
+#     {
+#         "title": {
+#             "text": "서울시 구별 아파트 수익률",
+#             "x": 0.5,
+#             "y": 0.9,
+#             "font": {
+#                 "size": 20
+#             }
+#         },
+#         "showlegend": True,
+#         "xaxis": {
+#         },
+#         "yaxis": {
+#             "tickformat": "%"
+#         },
+#         "template": 'none'
+#
+#     }
+# )
+#
+# fig.show()
+
+"""5. 추가 문법 이해 (정렬, sort_values(), sort_index())
+"""
