@@ -5,6 +5,7 @@
 3. 누적 수익률 계산하기
 4. 시각화 하기
 5. 추가 문법 이해 (정렬, sort_values(), sort_index())
+6. 2017년도부터 2020년 8월말까지의 수익률 분석
 """
 
 import pickle
@@ -195,3 +196,131 @@ import plotly.graph_objects as go
 
 """5. 추가 문법 이해 (정렬, sort_values(), sort_index())
 """
+# # print(gu_profitrate.head())
+#
+# # 최종 수익률 확인 - 202008 시점
+# final_2006_202008 = gu_profitrate.loc["2020-08-01"]
+# print(final_2006_202008.sort_values(ascending=False))
+
+"""6. 2017년도부터 2020년 8월말까지의 수익률 분석
+"""
+# # column 확인
+# print(apartment_toflourish.columns)
+#
+# # list로 만들기 - append
+# # 2017년도의 데이터만 가져온다
+# period_list = list()
+# for index in list(apartment_toflourish.columns):
+#     if index > 201700:
+#         period_list.append(index)
+#
+# print(period_list)
+#
+# apartment_toflourish_2017 = apartment_toflourish[period_list]
+# apartment_toflourish_2017.head()
+#
+# # 정리
+# gu_list = list(apartment_toflourish_2017.index)
+# each_gu = apartment_toflourish_2017.loc[gu_list[0]]
+# changerate = each_gu.pct_change()
+# changerate.name = 'change_rate'
+# each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+# each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+# gu_profitrate = each_gu_changerate[['profit_rate']].copy()
+# gu_profitrate.columns = ['강남구']
+#
+# for gu in gu_list[1:]:
+#     each_gu = apartment_toflourish_2017.loc[gu]
+#     changerate = each_gu.pct_change()
+#     changerate.name = 'change_rate'
+#     each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+#     each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+#     gu_profitrate_each = each_gu_changerate[['profit_rate']].copy()
+#     gu_profitrate_each.columns = [gu]
+#     gu_profitrate = pd.concat([gu_profitrate, gu_profitrate_each], axis=1)
+#
+# gu_profitrate = gu_profitrate.fillna(1)
+#
+# # 최종 수익률 구하기 - 202008 기준
+# gu_profitrate.tail()
+# final_2017_202008 = gu_profitrate.loc[202008]
+# final_2017_202008.sort_values(ascending=False)
+
+# # 랭킹 1,2,3만 뽑아내기
+# final_2017_202008.sort_values(ascending=False).index[:3]
+
+# # 반복문 range 로 시작기간 특정하기, range(a,b,c)는 a부터 b-c 까지 c를 더하며 반복
+# for index in range(200600, 202100, 100):
+#     print(index)
+
+
+# # 최종 코드 - 수익률에 따른 구 list
+# for start_index in range(200600, 202100, 100):
+#     period_list = list()
+#     for index in list(apartment_toflourish.columns):
+#         if index > start_index:
+#             period_list.append(index)
+#     apartment_toflourish_start = apartment_toflourish[period_list]
+#     gu_list = list(apartment_toflourish_start.index)
+#
+#     each_gu = apartment_toflourish_start.loc[gu_list[0]]
+#     changerate = each_gu.pct_change()
+#     changerate.name = 'change_rate'
+#     each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+#     each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+#     gu_profitrate = each_gu_changerate[['profit_rate']].copy()
+#     gu_profitrate.columns = ['강남구']
+#
+#     for gu in gu_list[1:]:
+#         each_gu = apartment_toflourish_start.loc[gu]
+#         changerate = each_gu.pct_change()
+#         changerate.name = 'change_rate'
+#         each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+#         each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+#         gu_profitrate_each = each_gu_changerate[['profit_rate']].copy()
+#         gu_profitrate_each.columns = [gu]
+#         gu_profitrate = pd.concat([gu_profitrate, gu_profitrate_each], axis=1)
+#
+#     gu_profitrate = gu_profitrate.fillna(1)
+#     final_result = gu_profitrate.loc[202008]
+#     print(start_index + 1, "~ 202008:", list(final_result.sort_values(ascending=False).index[:3]))
+
+# 수익률 3위까지 계산
+from collections import defaultdict
+gu_profit_ranking = defaultdict(int)
+
+
+for start_index in range(200600, 202100, 100):
+    period_list = list()
+    for index in list(apartment_toflourish.columns):
+        if index > start_index:
+            period_list.append(index)
+    apartment_toflourish_start = apartment_toflourish[period_list]
+    gu_list = list(apartment_toflourish_start.index)
+
+    each_gu = apartment_toflourish_start.loc[gu_list[0]]
+    changerate = each_gu.pct_change()
+    changerate.name = 'change_rate'
+    each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+    each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+    gu_profitrate = each_gu_changerate[['profit_rate']].copy()
+    gu_profitrate.columns = ['강남구']
+
+    for gu in gu_list[1:]:
+        each_gu = apartment_toflourish_start.loc[gu]
+        changerate = each_gu.pct_change()
+        changerate.name = 'change_rate'
+        each_gu_changerate = pd.concat([each_gu, changerate], axis=1)
+        each_gu_changerate['profit_rate'] = (each_gu_changerate["change_rate"] + 1).cumprod()
+        gu_profitrate_each = each_gu_changerate[['profit_rate']].copy()
+        gu_profitrate_each.columns = [gu]
+        gu_profitrate = pd.concat([gu_profitrate, gu_profitrate_each], axis=1)
+
+    gu_profitrate = gu_profitrate.fillna(1)
+    final_result = gu_profitrate.loc[202008]
+
+    for num, gu_item in enumerate(list(final_result.sort_values(ascending=False).index[:3])):
+        # gu_profit_ranking[gu_item] = gu_profit_ranking[gu_item] + (1 / (num + 1))
+        gu_profit_ranking[gu_item] += 1
+
+print(gu_profit_ranking)
