@@ -122,4 +122,69 @@ with open('apartment_data_update.pickle', 'rb') as pickle_filename:
 
 """4. 특정 아파트 찾기
 """
-print(apartment[apartment['단지명'].str.contains('북한산시티')]['단지명'].unique())
+# print(apartment[apartment['단지명'].str.contains('북한산시티')]['단지명'].unique())
+print(apartment[apartment["단지명"] == "에스케이북한산시티"].head())
+
+# 특정 아파트를 copy()
+doc_pick1 = apartment[apartment['단지명'] == '강남한양수자인(4단지)'].copy()
+doc_pick1 = doc_pick1.groupby(['계약년월']).mean()
+doc_pick1.index = pd.to_datetime(doc_pick1.index, format='%Y%m', errors='raise')
+
+doc_pick2 = apartment[apartment['단지명'] == '주공아파트 5단지'].copy()
+doc_pick2 = doc_pick2.groupby(['계약년월']).mean()
+doc_pick2.index = pd.to_datetime(doc_pick2.index, format='%Y%m', errors='raise')
+
+doc_pick3 = apartment[apartment['단지명'] == '에스케이북한산시티'].copy()
+doc_pick3 = doc_pick3.groupby(['계약년월']).mean()
+doc_pick3.index = pd.to_datetime(doc_pick3.index, format='%Y%m', errors='raise')
+
+# # plotly
+# import plotly.graph_objects as go
+#
+# fig = go.Figure()
+#
+# fig.add_trace(
+#     go.Scatter(
+#         x=doc_pick1.index, y=doc_pick1['평당매매가'], name='강남한양수자인(4단지)'
+#     )
+# )
+#
+# fig.add_trace(
+#     go.Scatter(
+#         x=doc_pick2.index, y=doc_pick2['평당매매가'], name='주공아파트 5단지'
+#     )
+# )
+#
+# fig.add_trace(
+#     go.Scatter(
+#         x=doc_pick3.index, y=doc_pick3['평당매매가'], name='에스케이북한산시티'
+#     )
+# )
+#
+# fig.update_layout(
+#     {
+#         "title": {
+#             "text": "특정 단지 아파트 평당매매가 트렌드",
+#             "x": 0.5,
+#             "y": 0.9,
+#             "font": {
+#                 "size": 20
+#             }
+#         },
+#         "showlegend": True,
+#         "xaxis": {
+#         },
+#         "yaxis": {
+#             "tickformat": ","
+#         },
+#         "template": 'none'
+#
+#     }
+# )
+#
+# fig.show()
+
+# 수익률 확인
+print (int(doc_pick1.loc['2017-01-01']['거래금액(만원)']), int(doc_pick1.iloc[-1]['거래금액(만원)']), int(doc_pick1.iloc[-1]['거래금액(만원)']/doc_pick1.loc['2017-01-01']['거래금액(만원)']*100), '%')
+print (int(doc_pick2.loc['2017-01-01']['거래금액(만원)']), int(doc_pick2.iloc[-1]['거래금액(만원)']), int(doc_pick2.iloc[-1]['거래금액(만원)']/doc_pick2.loc['2017-01-01']['거래금액(만원)']*100), '%')
+print (int(doc_pick3.loc['2017-01-01']['거래금액(만원)']), int(doc_pick3.iloc[-1]['거래금액(만원)']), int(doc_pick3.iloc[-1]['거래금액(만원)']/doc_pick3.loc['2017-01-01']['거래금액(만원)']*100), '%')
