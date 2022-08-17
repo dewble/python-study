@@ -13,20 +13,31 @@ import pandas as pd
 """
 with open('apartment_data.pickle', 'rb') as pickle_filename:
     apartment = pickle.load(pickle_filename)
+pd.set_option('display.max_column', None)
+# print(apartment.info())
+
 apartment['거래금액(만원)'] = apartment['거래금액(만원)'].str.replace(',', '')
 apartment = apartment.astype({'거래금액(만원)': 'int64'})
 apartment['계약년월일'] = pd.to_datetime(apartment['계약년월일'], format='%Y%m%d', errors='raise')
+# datetime에서 year을 추출하여 df에 추가
 apartment['year'] = apartment['계약년월일'].dt.year
+# datetime에서 month를 추출하야 df에 추가
 apartment['month'] = apartment['계약년월일'].dt.month
 apartment['시'] = apartment['시군구'].str.split().str[0]
 apartment['구'] = apartment['시군구'].str.split().str[1]
 apartment['동'] = apartment['시군구'].str.split().str[2]
-# groupby > index로 만들어진다, index reset 필요
+# groupby['a','b','c'] > a,b,c가 index로 만들어진다, index reset 필요
 apartment_gu = apartment.groupby(['year', 'month', '구']).mean()
 apartment_gu = apartment_gu.reset_index()
 apartment_gu_flourish = apartment_gu[['구', '거래금액(만원)', '계약년월', 'year', 'month']].copy()
 
+# # 3. 데이터의 크기 확인
 # print(apartment_gu_flourish.head())
+# print(apartment_gu_flourish.tail())
+
+# 4. 데이터 구성 요소의 속성 확인
+print(apartment_gu_flourish.shape)
+print(apartment_gu_flourish.info())
 
 """2. 각각의 구별로 연도에 따라 어떻게 거래금액이 변화해왔는지 보고 싶다.
 """
@@ -87,4 +98,4 @@ for index in datelist[1:]:
 """5. csv 파일로 저장
 """
 # apartment_toflourish.info()
-apartment_toflourish.to_csv("seoul_apartment.csv", encoding="utf-8-sig")
+# apartment_toflourish.to_csv("seoul_apartment.csv", encoding="utf-8-sig")
